@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Teranga Shop') }}</title>
+    <title>{{ config('app.name', 'Mega Zone') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -25,7 +25,7 @@
                         <!-- Logo -->
                         <div style="flex-shrink: 0; display: flex; align-items: center;">
                             <a href="{{ route('store.index') }}" style="font-size: 24px; font-weight: 800; color: white; text-decoration: none; letter-spacing: 0.05em;">
-                                <span style="color: #fde047;">🛍️</span> Teranga Shop
+                                <span style="color: #fde047;">🛍️</span> Mega Zone
                             </a>
                         </div>
 
@@ -151,7 +151,7 @@
         <footer class="bg-white border-t">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                 <div class="text-center text-gray-500 text-sm">
-                    © {{ date('Y') }} Teranga Shop. Tous droits réservés.
+                    © {{ date('Y') }} Mega Zone. Tous droits réservés.
                 </div>
             </div>
         </footer>

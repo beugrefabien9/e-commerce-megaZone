@@ -20,7 +20,7 @@
             <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-8 text-white">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-2xl font-bold">Teranga Shop</h2>
+                        <h2 class="text-2xl font-bold">Mega Zone</h2>
                         <p class="text-indigo-200 text-sm mt-1">Reçu de commande</p>
                     </div>
                     <div class="text-right">

@@ -6,7 +6,7 @@
     <div style="max-width: 1280px; margin: 0 auto; padding: 64px 16px;">
         <div style="text-align: center;">
             <h1 style="font-size: 36px; font-weight: 800; letter-spacing: -0.025em; color: white;">
-                Bienvenue sur <span style="color: #fde047;">Teranga Shop</span>
+                Bienvenue sur <span style="color: #fde047;">Mega Zone</span>
             </h1>
             <p style="margin-top: 12px; max-width: 448px; margin-left: auto; margin-right: auto; font-size: 16px; color: #e0e7ff;">
                 Découvrez notre sélection de produits de qualité. Livraison rapide et service client exceptionnel.
