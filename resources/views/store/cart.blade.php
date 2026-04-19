@@ -2,20 +2,20 @@
 
 @section('content')
 <div class="bg-white">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-8">
-            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Mon panier</h1>
-            <span class="text-sm text-gray-500">{{ count($cartItems) }} article(s)</span>
+    <div style="max-width: 1280px; margin: 0 auto; padding: 32px 16px;">
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
+            <h1 style="font-size: 24px; font-weight: 800; color: #111827;">Mon panier</h1>
+            <span style="font-size: 14px; color: #6b7280;">{{ count($cartItems) }} article(s)</span>
         </div>
 
         @if(count($cartItems) > 0)
-            <div class="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
-                <section aria-labelledby="cart-heading" class="lg:col-span-7">
+            <div style="display: block; margin-top: 32px;">
+                <section aria-labelledby="cart-heading" style="width: 100%;">
                     <h2 id="cart-heading" class="sr-only">Articles dans votre panier</h2>
 
                     <ul role="list" class="border-t border-b border-gray-200 divide-y divide-gray-200">
                         @foreach($cartItems as $item)
-                        <li class="flex py-6 sm:py-10">
+                        <li style="display: flex; padding: 20px 0; gap: 16px;">
                             <div class="flex-shrink-0">
                                 @if($item['product']->primaryImage)
                                     @php
@@ -26,16 +26,16 @@
                                             $cartImageSrc = asset('storage/' . $cartImagePath);
                                         }
                                     @endphp
-                                    <img src="{{ $cartImageSrc }}" alt="{{ $item['product']->primaryImage->alt_text }}" class="w-24 h-24 rounded-md object-center object-cover sm:w-32 sm:h-32">
+                                    <img src="{{ $cartImageSrc }}" alt="{{ $item['product']->primaryImage->alt_text }}" style="width: 96px; height: 96px; border-radius: 6px; object-fit: cover; object-position: center; flex-shrink: 0;">
                                 @else
-                                    <div class="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center sm:w-32 sm:h-32">
-                                        <span class="text-gray-500 text-sm">Pas d'image</span>
+                                    <div style="width: 96px; height: 96px; background: #e5e7eb; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <span style="color: #6b7280; font-size: 12px;">Pas d'image</span>
                                     </div>
                                 @endif
                             </div>
 
-                            <div class="ml-4 flex-1 flex flex-col justify-between sm:ml-6">
-                                <div class="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0;">
+                                <div style="position: relative; padding-right: 24px;">
                                     <div>
                                         <div class="flex justify-between">
                                             <h3 class="text-sm">
@@ -50,21 +50,21 @@
                                         <p class="mt-1 text-sm font-medium text-gray-900">{{ number_format($item['price'], 2) }} FCFA</p>
                                     </div>
 
-                                    <div class="mt-4 sm:mt-0 sm:pr-9">
+                                        <div style="margin-top: 12px;">
                                         <div class="flex items-center">
                                             <form action="{{ route('cart.update', $item['product']) }}" method="POST" id="update-form-{{ $item['product']->id }}">
                                                 @csrf
                                                 @method('PATCH')
                                             </form>
                                             <label for="quantity-{{ $item['product']->id }}" class="sr-only">Quantité</label>
-                                            <select id="quantity-{{ $item['product']->id }}" name="quantity" form="update-form-{{ $item['product']->id }}" onchange="this.form.submit()" class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <select id="quantity-{{ $item['product']->id }}" name="quantity" form="update-form-{{ $item['product']->id }}" onchange="this.form.submit()" style="max-width: 100%; border-radius: 6px; border: 1px solid #d1d5db; padding: 6px 10px; font-size: 14px; color: #374151; font-weight: 500; background: white;">
                                                 @for($i = 1; $i <= min($item['product']->stock_quantity, 10); $i++)
                                                     <option value="{{ $i }}" {{ $item['quantity'] == $i ? 'selected' : '' }}>{{ $i }}</option>
                                                 @endfor
                                             </select>
                                         </div>
 
-                                        <div class="absolute top-0 right-0">
+                                        <div style="position: absolute; top: 0; right: 0;">
                                             <form action="{{ route('cart.remove', $item['product']) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
@@ -92,7 +92,7 @@
                 </section>
 
                 <!-- Order summary -->
-                <section aria-labelledby="summary-heading" class="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5">
+                <section aria-labelledby="summary-heading" style="margin-top: 32px; background: #f9fafb; border-radius: 8px; padding: 20px;">
                     <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Récapitulatif de la commande</h2>
 
                     <dl class="mt-6 space-y-4">
@@ -135,4 +135,17 @@
         @endif
     </div>
 </div>
+
+<!-- Responsive styles for cart -->
+<style>
+    @media (min-width: 640px) {
+        div[style*="padding: 32px 16px"] { padding: 48px 24px !important; }
+        h1[style*="font-size: 24px"] { font-size: 30px !important; }
+    }
+    @media (min-width: 1024px) {
+        div[style*="display: block;"][style*="margin-top: 32px;"] { display: grid !important; grid-template-columns: 7fr 5fr !important; gap: 48px !important; }
+        section[style*="width: 100%"] { grid-column: 1 !important; }
+        section[style*="margin-top: 32px"] { margin-top: 0 !important; grid-column: 2 !important; }
+    }
+</style>
 @endsection

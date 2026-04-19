@@ -15,40 +15,47 @@
 <body class="antialiased" style="background-color: #f9fafb;">
     <div style="min-height: 100vh; display: flex; flex-direction: column;">
         <!-- Navigation Admin -->
-        <nav style="background: linear-gradient(to right, #1e3a8a, #1e40af, #3730a3); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <nav style="background: linear-gradient(to right, #1e3a8a, #1e40af, #3730a3); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" x-data="{ mobileMenu: false }">
             <div style="max-width: 1280px; margin: 0 auto; padding: 0 16px;">
-                <div style="display: flex; justify-content: space-between; height: 64px;">
-                    <div style="display: flex;">
+                <div style="display: flex; justify-content: space-between; align-items: center; height: 64px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <!-- Mobile menu button -->
+                        <button @click="mobileMenu = !mobileMenu" style="display: block; background: none; border: none; color: white; padding: 8px; cursor: pointer;" class="admin-mobile-btn">
+                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        
                         <!-- Logo -->
                         <div style="flex-shrink: 0; display: flex; align-items: center;">
-                            <a href="{{ route('admin.store') }}" style="font-size: 20px; font-weight: 700; color: white; text-decoration: none;">
-                                ⚙️ Teranga Admin
+                            <a href="{{ route('admin.store') }}" style="font-size: 18px; font-weight: 700; color: white; text-decoration: none;">
+                                ⚙️ Mega Admin
                             </a>
                         </div>
 
-                        <!-- Navigation Links -->
-                        <div style="display: none; gap: 32px; margin-left: 40px;" class="admin-nav">
-                            <a href="{{ route('admin.store') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.store') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.store') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 14px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center;">
+                        <!-- Desktop Navigation Links -->
+                        <div style="display: none; gap: 24px; margin-left: 32px;" class="admin-nav">
+                            <a href="{{ route('admin.store') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.store') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.store') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap;">
                                 📊 Tableau de bord
                             </a>
-                            <a href="{{ route('admin.products.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.products.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.products.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 14px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center;">
+                            <a href="{{ route('admin.products.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.products.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.products.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap;">
                                 📦 Produits
                             </a>
-                            <a href="{{ route('admin.categories.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.categories.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.categories.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 14px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center;">
+                            <a href="{{ route('admin.categories.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.categories.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.categories.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap;">
                                 📁 Catégories
                             </a>
-                            <a href="{{ route('admin.sub-categories.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.sub-categories.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.sub-categories.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 14px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center;">
+                            <a href="{{ route('admin.sub-categories.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.sub-categories.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.sub-categories.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap;">
                                 📂 Sous-catégories
                             </a>
-                            <a href="{{ route('admin.orders.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.orders.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.orders.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 14px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center;">
+                            <a href="{{ route('admin.orders.index') }}" style="border-bottom: 2px solid {{ request()->routeIs('admin.orders.*') ? '#818cf8' : 'transparent' }}; color: {{ request()->routeIs('admin.orders.*') ? 'white' : '#d1d5db' }}; padding: 4px 8px; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap;">
                                 🛒 Commandes
                             </a>
                         </div>
                     </div>
 
-                    <div style="display: none; align-items: center; margin-left: 24px;" class="admin-right">
+                    <div style="display: none; align-items: center; gap: 12px;" class="admin-right">
                         <!-- Store Link -->
-                        <a href="{{ route('store.index') }}" style="color: #fde047; text-decoration: none; padding: 8px 16px; font-size: 14px; font-weight: 600; border-radius: 8px; background: rgba(255,255,255,0.1); margin-right: 12px;">
+                        <a href="{{ route('store.index') }}" style="color: #fde047; text-decoration: none; padding: 6px 12px; font-size: 13px; font-weight: 600; border-radius: 6px; background: rgba(255,255,255,0.1); white-space: nowrap;">
                             🏪 Voir la boutique
                         </a>
 
@@ -74,10 +81,38 @@
             </div>
         </nav>
         
+        <!-- Mobile Menu Dropdown -->
+        <div x-show="mobileMenu" @click.away="mobileMenu = false" style="display: none; background: white; border-bottom: 2px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" class="admin-mobile-menu">
+            <div style="max-width: 1280px; margin: 0 auto; padding: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="{{ route('admin.store') }}" style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px; font-weight: 600; color: #374151; text-decoration: none;">
+                        📊 Tableau de bord
+                    </a>
+                    <a href="{{ route('admin.products.index') }}" style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px; font-weight: 600; color: #374151; text-decoration: none;">
+                        📦 Produits
+                    </a>
+                    <a href="{{ route('admin.categories.index') }}" style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px; font-weight: 600; color: #374151; text-decoration: none;">
+                        📁 Catégories
+                    </a>
+                    <a href="{{ route('admin.sub-categories.index') }}" style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px; font-weight: 600; color: #374151; text-decoration: none;">
+                        📂 Sous-catégories
+                    </a>
+                    <a href="{{ route('admin.orders.index') }}" style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px; font-weight: 600; color: #374151; text-decoration: none;">
+                        🛒 Commandes
+                    </a>
+                    <a href="{{ route('store.index') }}" style="padding: 12px; background: #fef3c7; border-radius: 8px; font-size: 14px; font-weight: 600; color: #92400e; text-decoration: none; margin-top: 8px;">
+                        🏪 Voir la boutique
+                    </a>
+                </div>
+            </div>
+        </div>
+        
         <style>
             @media (min-width: 768px) {
                 .admin-nav { display: flex !important; }
                 .admin-right { display: flex !important; }
+                .admin-mobile-btn { display: none !important; }
+                .admin-mobile-menu { display: none !important; }
             }
         </style>
 

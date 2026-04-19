@@ -3,49 +3,65 @@
 @section('content')
 <!-- Hero Section -->
 <div style="background: linear-gradient(to right, #4f46e5, #9333ea);">
-    <div style="max-width: 1280px; margin: 0 auto; padding: 64px 16px;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 40px 16px;">
         <div style="text-align: center;">
-            <h1 style="font-size: 36px; font-weight: 800; letter-spacing: -0.025em; color: white;">
+            <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.025em; color: white; line-height: 1.2;">
                 Bienvenue sur <span style="color: #fde047;">Mega Zone</span>
             </h1>
-            <p style="margin-top: 12px; max-width: 448px; margin-left: auto; margin-right: auto; font-size: 16px; color: #e0e7ff;">
+            <p style="margin-top: 12px; max-width: 448px; margin-left: auto; margin-right: auto; font-size: 14px; color: #e0e7ff; line-height: 1.5;">
                 Découvrez notre sélection de produits de qualité. Livraison rapide et service client exceptionnel.
             </p>
         </div>
     </div>
 </div>
 
-<!-- Responsive styles for Hero -->
+<!-- Responsive styles -->
 <style>
     @media (min-width: 640px) {
-        div[style*="padding: 64px 16px"] { padding: 96px 24px !important; }
-        div[style*="padding: 64px 16px"] h1 { font-size: 48px !important; }
-        div[style*="padding: 64px 16px"] p { font-size: 18px !important; }
+        div[style*="padding: 40px 16px"] { padding: 64px 24px !important; }
+        div[style*="padding: 40px 16px"] h1 { font-size: 36px !important; }
+        div[style*="padding: 40px 16px"] p { font-size: 16px !important; }
     }
     @media (min-width: 768px) {
-        div[style*="padding: 64px 16px"] h1 { font-size: 60px !important; }
-        div[style*="padding: 64px 16px"] p { max-width: 768px !important; margin-top: 20px !important; font-size: 20px !important; }
-    }
-    @media (min-width: 640px) {
-        div[style*="grid-template-columns: repeat(1, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+        div[style*="padding: 40px 16px"] { padding: 80px 32px !important; }
+        div[style*="padding: 40px 16px"] h1 { font-size: 48px !important; }
+        div[style*="padding: 40px 16px"] p { font-size: 18px !important; max-width: 768px !important; }
     }
     @media (min-width: 1024px) {
-        div[style*="grid-template-columns: repeat(1, 1fr)"] { grid-template-columns: repeat(4, 1fr) !important; }
+        div[style*="padding: 40px 16px"] h1 { font-size: 60px !important; }
+        div[style*="padding: 40px 16px"] p { font-size: 20px !important; margin-top: 20px !important; }
+    }
+    /* Product grid responsive */
+    @media (min-width: 640px) {
+        .product-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+    @media (min-width: 768px) {
+        .product-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (min-width: 1024px) {
+        .product-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    }
+    /* Product card image height */
+    @media (max-width: 639px) {
+        .product-image { min-height: 240px !important; }
+    }
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .product-image { min-height: 280px !important; }
     }
 </style>
 
 <!-- All Products Section -->
-<div style="max-width: 1280px; margin: 0 auto; padding: 64px 16px;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;">
-        <h2 style="font-size: 30px; font-weight: 800; letter-spacing: -0.025em; color: #111827;">Tous nos produits</h2>
+<div style="max-width: 1280px; margin: 0 auto; padding: 32px 16px;">
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
+        <h2 style="font-size: 24px; font-weight: 800; letter-spacing: -0.025em; color: #111827;">Tous nos produits</h2>
         <p style="font-size: 14px; color: #6b7280;">{{ $products->total() }} produit(s) disponible(s)</p>
     </div>
     
     @if($products->count() > 0)
-    <div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 24px;">
+    <div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px;" class="product-grid">
         @foreach($products as $product)
         <div style="position: relative; background: white; border-radius: 8px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
-            <div style="width: 100%; min-height: 320px; background-color: #e5e7eb; border-radius: 8px 8px 0 0; overflow: hidden; position: relative;">
+            <div style="width: 100%; min-height: 280px; background-color: #e5e7eb; border-radius: 8px 8px 0 0; overflow: hidden; position: relative;" class="product-image">
                 @if($product->primaryImage)
                     @php
                         $imagePath = $product->primaryImage->image_path;

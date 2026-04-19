@@ -2,30 +2,30 @@
 
 @section('content')
 <div class="bg-white">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Finaliser la commande</h1>
+    <div style="max-width: 1280px; margin: 0 auto; padding: 32px 16px;">
+        <h1 style="font-size: 24px; font-weight: 800; color: #111827;">Finaliser la commande</h1>
 
-        <form action="{{ route('checkout.store') }}" method="POST" class="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+        <form action="{{ route('checkout.store') }}" method="POST" style="margin-top: 32px; display: block;">
             @csrf
 
-            <section aria-labelledby="cart-heading" class="lg:col-span-7">
+            <section aria-labelledby="cart-heading" style="width: 100%;">
                 <h2 id="cart-heading" class="sr-only">Articles dans votre panier</h2>
 
                 <ul role="list" class="border-t border-b border-gray-200 divide-y divide-gray-200">
                     @foreach($cartItems as $item)
-                    <li class="flex py-6 sm:py-10">
+                    <li style="display: flex; padding: 20px 0; gap: 16px;">
                         <div class="flex-shrink-0">
                             @if($item['product']->primaryImage)
-                                <img src="{{ asset('storage/' . $item['product']->primaryImage->image_path) }}" alt="{{ $item['product']->primaryImage->alt_text }}" class="w-24 h-24 rounded-md object-center object-cover sm:w-32 sm:h-32">
+                                <img src="{{ asset('storage/' . $item['product']->primaryImage->image_path) }}" alt="{{ $item['product']->primaryImage->alt_text }}" style="width: 96px; height: 96px; border-radius: 6px; object-fit: cover; object-position: center; flex-shrink: 0;">
                             @else
-                                <div class="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center sm:w-32 sm:h-32">
-                                    <span class="text-gray-500 text-sm">Pas d'image</span>
+                                <div style="width: 96px; height: 96px; background: #e5e7eb; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <span style="color: #6b7280; font-size: 12px;">Pas d'image</span>
                                 </div>
                             @endif
                         </div>
 
-                        <div class="ml-4 flex-1 flex flex-col justify-between sm:ml-6">
-                            <div class="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0;">
+                            <div style="position: relative;">
                                 <div>
                                     <div class="flex justify-between">
                                         <h3 class="text-sm">
@@ -40,7 +40,7 @@
                                     <p class="mt-1 text-sm font-medium text-gray-900">{{ number_format($item['price'], 2) }} FCFA x {{ $item['quantity'] }}</p>
                                 </div>
 
-                                <div class="mt-4 sm:mt-0 sm:pr-9">
+                                    <div style="margin-top: 12px;">
                                     <p class="text-sm font-medium text-gray-900">{{ number_format($item['total'], 2) }} FCFA</p>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
             </section>
 
             <!-- Order summary -->
-            <section aria-labelledby="summary-heading" class="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5">
+            <section aria-labelledby="summary-heading" style="margin-top: 32px; background: #f9fafb; border-radius: 8px; padding: 20px;">
                 <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Récapitulatif de la commande</h2>
 
                 <dl class="mt-6 space-y-4">
@@ -203,4 +203,17 @@
         </form>
     </div>
 </div>
+
+<!-- Responsive styles for checkout -->
+<style>
+    @media (min-width: 640px) {
+        div[style*="padding: 32px 16px"] { padding: 48px 24px !important; }
+        h1[style*="font-size: 24px"] { font-size: 30px !important; }
+    }
+    @media (min-width: 1024px) {
+        form[style*="display: block;"] { display: grid !important; grid-template-columns: 7fr 5fr !important; gap: 48px !important; align-items: start !important; }
+        section[style*="width: 100%"] { grid-column: 1 !important; }
+        section[style*="margin-top: 32px"][style*="background: #f9fafb;"] { margin-top: 0 !important; grid-column: 2 !important; }
+    }
+</style>
 @endsection
