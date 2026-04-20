@@ -78,18 +78,18 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Images du produit</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2" style="font-size: 2rem;">Image principale du produit</label>
                                 
-                                <!-- Option 1: Upload de fichiers -->
+                                <!-- Option 1: Upload de fichier -->
                                 <div class="mb-4">
-                                    <label for="images" class="block text-sm text-gray-600 mb-1">Option 1 : Télécharger des images</label>
-                                    <input type="file" name="images[]" id="images" multiple accept="image/*" class="block w-full text-sm text-gray-500
+                                    <label for="primary_image" class="block text-sm text-gray-600 mb-1">Option 1 : Télécharger une image</label>
+                                    <input type="file" name="primary_image" id="primary_image" accept="image/*" class="block w-full text-sm text-gray-500
                                         file:mr-4 file:py-2 file:px-4
                                         file:rounded-md file:border-0
                                         file:text-sm file:font-semibold
                                         file:bg-indigo-50 file:text-indigo-700
                                         hover:file:bg-indigo-100">
-                                    <p class="mt-1 text-xs text-gray-500">Formats acceptés : JPEG, PNG, JPG, GIF (max 2MB par image)</p>
+                                    <p class="mt-1 text-xs text-gray-500">Formats acceptés : JPEG, PNG, JPG, GIF (max 2MB)</p>
                                 </div>
 
                                 <!-- Séparateur -->
@@ -104,15 +104,58 @@
 
                                 <!-- Option 2: URL d'image -->
                                 <div>
-                                    <label for="image_url" class="block text-sm text-gray-600 mb-1">Option 2 : URL de l'image</label>
-                                    <input type="url" name="image_url" id="image_url" placeholder="https://example.com/image.jpg" 
+                                    <label for="primary_image_url" class="block text-sm text-gray-600 mb-1">Option 2 : URL de l'image principale</label>
+                                    <input type="url" name="primary_image_url" id="primary_image_url" placeholder="https://example.com/image.jpg" 
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     <p class="mt-1 text-xs text-gray-500">Collez le lien direct vers l'image (JPEG, PNG, GIF, WebP)</p>
                                     
                                     <!-- Preview de l'URL -->
-                                    <div id="url-preview" class="mt-3 hidden">
+                                    <div id="primary-url-preview" class="mt-3 hidden">
                                         <p class="text-xs text-gray-600 mb-1">Aperçu :</p>
-                                        <img id="preview-image" src="" alt="Aperçu" class="max-w-xs h-auto rounded-lg border border-gray-300">
+                                        <img id="primary-preview-image" src="" alt="Aperçu" class="max-w-xs h-auto rounded-lg border border-gray-300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Images détaillées (galerie) -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2 " style="font-size: 2rem;">Images détaillées du produit (galerie)</label>
+                                <p class="text-xs text-gray-500 mb-4">Ajoutez des images supplémentaires pour montrer le produit sous différents angles</p>
+                                
+                                <!-- Option 1: Upload de fichiers -->
+                                <div class="mb-4">
+                                    <label for="detail_images" class="block text-sm text-gray-600 mb-1">Option 1 : Télécharger des images</label>
+                                    <input type="file" name="detail_images[]" id="detail_images" multiple accept="image/*" class="block w-full text-sm text-gray-500
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-md file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-indigo-50 file:text-indigo-700
+                                        hover:file:bg-indigo-100">
+                                    <p class="mt-1 text-xs text-gray-500">Formats acceptés : JPEG, PNG, JPG, GIF (max 2MB par image)</p>
+                                    <p class="mt-1 text-xs text-gray-500">Vous pouvez sélectionner plusieurs images</p>
+                                </div>
+
+                                <!-- Séparateur -->
+                                <div class="relative mb-4">
+                                    <div class="absolute inset-0 flex items-center">
+                                        <div class="w-full border-t border-gray-300"></div>
+                                    </div>
+                                    <div class="relative flex justify-center text-sm">
+                                        <span class="px-2 bg-white text-gray-500">ou</span>
+                                    </div>
+                                </div>
+
+                                <!-- Option 2: URLs d'images -->
+                                <div>
+                                    <label for="detail_image_urls" class="block text-sm text-gray-600 mb-1">Option 2 : URLs des images (une par ligne)</label>
+                                    <textarea name="detail_image_urls" id="detail_image_urls" rows="4" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg&#10;https://example.com/image3.jpg" 
+                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                                    <p class="mt-1 text-xs text-gray-500">Collez les liens directs vers les images (un lien par ligne)</p>
+                                    
+                                    <!-- Preview des URLs -->
+                                    <div id="detail-urls-preview" class="mt-3 hidden">
+                                        <p class="text-xs text-gray-600 mb-2">Aperçu des images :</p>
+                                        <div id="detail-preview-container" class="grid grid-cols-3 gap-2"></div>
                                     </div>
                                 </div>
                             </div>
@@ -163,14 +206,14 @@ document.getElementById('category_id').addEventListener('change', function() {
     subCategorySelect.value = '';
 });
 
-// Preview de l'image URL
-const imageUrlInput = document.getElementById('image_url');
-const urlPreview = document.getElementById('url-preview');
-const previewImage = document.getElementById('preview-image');
+// Preview de l'image principale URL
+const primaryImageUrlInput = document.getElementById('primary_image_url');
+const primaryUrlPreview = document.getElementById('primary-url-preview');
+const primaryPreviewImage = document.getElementById('primary-preview-image');
 
-if (imageUrlInput) {
+if (primaryImageUrlInput) {
     let debounceTimer;
-    imageUrlInput.addEventListener('input', function() {
+    primaryImageUrlInput.addEventListener('input', function() {
         clearTimeout(debounceTimer);
         const url = this.value.trim();
         
@@ -179,21 +222,79 @@ if (imageUrlInput) {
                 // Vérifier si c'est une URL valide
                 try {
                     new URL(url);
-                    previewImage.src = url;
-                    urlPreview.classList.remove('hidden');
+                    primaryPreviewImage.src = url;
+                    primaryUrlPreview.classList.remove('hidden');
                     
-                    previewImage.onload = function() {
-                        urlPreview.classList.remove('hidden');
+                    primaryPreviewImage.onload = function() {
+                        primaryUrlPreview.classList.remove('hidden');
                     };
                     
-                    previewImage.onerror = function() {
-                        urlPreview.classList.add('hidden');
+                    primaryPreviewImage.onerror = function() {
+                        primaryUrlPreview.classList.add('hidden');
                     };
                 } catch (e) {
-                    urlPreview.classList.add('hidden');
+                    primaryUrlPreview.classList.add('hidden');
                 }
             } else {
-                urlPreview.classList.add('hidden');
+                primaryUrlPreview.classList.add('hidden');
+            }
+        }, 500);
+    });
+}
+
+// Preview des images détaillées URLs
+const detailImageUrlsInput = document.getElementById('detail_image_urls');
+const detailUrlsPreview = document.getElementById('detail-urls-preview');
+const detailPreviewContainer = document.getElementById('detail-preview-container');
+
+if (detailImageUrlsInput) {
+    let debounceTimer;
+    detailImageUrlsInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const urls = this.value.trim();
+        
+        debounceTimer = setTimeout(() => {
+            if (urls) {
+                const urlList = urls.split('\n').filter(url => url.trim() !== '');
+                detailPreviewContainer.innerHTML = '';
+                
+                if (urlList.length > 0) {
+                    detailUrlsPreview.classList.remove('hidden');
+                    
+                    urlList.forEach((url, index) => {
+                        const urlTrimmed = url.trim();
+                        try {
+                            new URL(urlTrimmed);
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'aspect-w-1 aspect-h-1';
+                            
+                            const img = document.createElement('img');
+                            img.src = urlTrimmed;
+                            img.alt = `Aperçu ${index + 1}`;
+                            img.className = 'w-full h-20 object-cover rounded-lg border border-gray-300';
+                            
+                            img.onload = function() {
+                                wrapper.appendChild(img);
+                                detailPreviewContainer.appendChild(wrapper);
+                            };
+                            
+                            img.onerror = function() {
+                                // Ne pas ajouter l'image si elle ne charge pas
+                            };
+                        } catch (e) {
+                            // URL invalide, ignorer
+                        }
+                    });
+                    
+                    if (detailPreviewContainer.children.length === 0) {
+                        detailUrlsPreview.classList.add('hidden');
+                    }
+                } else {
+                    detailUrlsPreview.classList.add('hidden');
+                }
+            } else {
+                detailUrlsPreview.classList.add('hidden');
+                detailPreviewContainer.innerHTML = '';
             }
         }, 500);
     });

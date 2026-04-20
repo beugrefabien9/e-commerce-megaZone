@@ -9,14 +9,15 @@
                 @if($product->images->count() > 0)
                     <div style="width: 100%; aspect-ratio: 1 / 1;">
                         @php
-                            $primaryImagePath = $product->primaryImage->image_path;
+                            $primaryImage = $product->primaryImage ?? $product->images->first();
+                            $primaryImagePath = $primaryImage->image_path;
                             if(str_starts_with($primaryImagePath, 'http://') || str_starts_with($primaryImagePath, 'https://')) {
                                 $mainImageSrc = $primaryImagePath;
                             } else {
                                 $mainImageSrc = asset('storage/' . $primaryImagePath);
                             }
                         @endphp
-                        <img id="main-image" src="{{ $mainImageSrc }}" alt="{{ $product->primaryImage->alt_text }}" style="width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 8px;">
+                        <img id="main-image" src="{{ $mainImageSrc }}" alt="{{ $primaryImage->alt_text }}" style="width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 8px;">
                     </div>
                     @if($product->images->count() > 1)
                         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px;">

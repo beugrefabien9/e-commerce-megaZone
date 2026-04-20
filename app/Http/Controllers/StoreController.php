@@ -59,8 +59,8 @@ class StoreController extends Controller
             abort(404);
         }
 
-        // Charge les relations du produit (images, catégorie, sous-catégorie)
-        $product->load(['images', 'category', 'subCategory']);
+        // Charge les relations du produit (images, primaryImage, catégorie, sous-catégorie)
+        $product->load(['images', 'primaryImage', 'category', 'subCategory']);
 
         // Récupère les produits similaires (même catégorie)
         $relatedProducts = Product::where('category_id', $product->category_id)

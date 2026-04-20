@@ -47,12 +47,14 @@ class ProductController extends Controller
             'stock_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'nullable|exists:sub_categories,id',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_url' => 'nullable|url',
+            'primary_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'primary_image_url' => 'nullable|url',
+            'detail_images' => 'nullable|array',
+            'detail_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'detail_image_urls' => 'nullable|string',
         ]);
 
-        $data = $request->except(['images', 'image_url', 'is_active', 'is_featured']);
+        $data = $request->except(['primary_image', 'primary_image_url', 'detail_images', 'detail_image_urls', 'is_active', 'is_featured']);
         $data['slug'] = Str::slug($request->name);
         $data['sku'] = 'SKU-' . strtoupper(Str::random(8));
         $data['is_active'] = $request->has('is_active');
@@ -60,14 +62,29 @@ class ProductController extends Controller
 
         $product = Product::create($data);
 
-        // Handle image URL if provided
-        if ($request->filled('image_url')) {
-            $this->handleImageUrl($product, $request->image_url);
+        // Handle primary image URL if provided
+        if ($request->filled('primary_image_url')) {
+            $this->handleImageUrl($product, $request->primary_image_url, true);
         }
         
-        // Handle image uploads if provided
-        if ($request->hasFile('images')) {
-            $this->handleImageUploads($product, $request->file('images'));
+        // Handle primary image upload if provided
+        if ($request->hasFile('primary_image')) {
+            $this->handleImageUploads($product, [$request->file('primary_image')], true);
+        }
+
+        // Handle detail image URLs if provided
+        if ($request->filled('detail_image_urls')) {
+            $urls = array_filter(explode("\n", $request->detail_image_urls), function($url) {
+                return filter_var(trim($url), FILTER_VALIDATE_URL);
+            });
+            foreach ($urls as $url) {
+                $this->handleImageUrl($product, trim($url), false);
+            }
+        }
+        
+        // Handle detail image uploads if provided
+        if ($request->hasFile('detail_images')) {
+            $this->handleImageUploads($product, $request->file('detail_images'), false);
         }
 
         return redirect()->route('admin.products.index')->with('success', 'Produit créé avec succès.');
@@ -99,18 +116,30 @@ class ProductController extends Controller
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_url' => 'nullable|url',
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'exists:product_images,id',
         ]);
 
-        $data = $request->except(['images', 'image_url', 'is_active', 'is_featured']);
+        $data = $request->except(['images', 'image_url', 'delete_images', 'is_active', 'is_featured']);
         $data['slug'] = Str::slug($request->name);
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
 
         $product->update($data);
 
+        // Handle image deletion
+        if ($request->filled('delete_images')) {
+            $this->handleImageDeletion($product, $request->delete_images);
+        }
+
         // Handle image uploads
         if ($request->hasFile('images')) {
             $this->handleImageUploads($product, $request->file('images'));
+        }
+
+        // Handle image URL
+        if ($request->filled('image_url')) {
+            $this->handleImageUrl($product, $request->image_url);
         }
 
         return redirect()->route('admin.products.index')->with('success', 'Produit mis à jour avec succès.');
@@ -131,7 +160,7 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Produit supprimé avec succès.');
     }
 
-    private function handleImageUploads(Product $product, array $images)
+    private function handleImageUploads(Product $product, array $images, bool $isPrimary = false)
     {
         $sortOrder = $product->images()->max('sort_order') ?? 0;
         $isFirstImage = $product->images()->count() === 0;
@@ -142,15 +171,18 @@ class ProductController extends Controller
             $product->images()->create([
                 'image_path' => $path,
                 'alt_text' => $product->name,
-                'is_primary' => $isFirstImage,
+                'is_primary' => $isPrimary || $isFirstImage,
                 'sort_order' => ++$sortOrder,
             ]);
             
-            $isFirstImage = false;
+            // Si c'est la première image qu'on ajoute comme principale, les suivantes ne le seront pas
+            if ($isFirstImage) {
+                $isFirstImage = false;
+            }
         }
     }
 
-    private function handleImageUrl(Product $product, string $url)
+    private function handleImageUrl(Product $product, string $url, bool $isPrimary = false)
     {
         $isFirstImage = $product->images()->count() === 0;
         $sortOrder = $product->images()->max('sort_order') ?? 0;
@@ -158,8 +190,34 @@ class ProductController extends Controller
         $product->images()->create([
             'image_path' => $url,
             'alt_text' => $product->name,
-            'is_primary' => $isFirstImage,
+            'is_primary' => $isPrimary || $isFirstImage,
             'sort_order' => ++$sortOrder,
         ]);
+    }
+
+    private function handleImageDeletion(Product $product, array $imageIds)
+    {
+        foreach ($imageIds as $imageId) {
+            $image = $product->images()->find($imageId);
+            
+            if ($image) {
+                // Delete physical file if it's not an external URL
+                if (!str_starts_with($image->image_path, 'http://') && !str_starts_with($image->image_path, 'https://')) {
+                    Storage::disk('public')->delete($image->image_path);
+                }
+                
+                // Delete database record
+                $image->delete();
+            }
+        }
+
+        // If no images left, nothing to do
+        // If images remain and none is primary, make the first one primary
+        if ($product->images()->count() > 0 && $product->images()->where('is_primary', true)->count() === 0) {
+            $firstImage = $product->images()->orderBy('sort_order')->first();
+            if ($firstImage) {
+                $firstImage->update(['is_primary' => true]);
+            }
+        }
     }
 }

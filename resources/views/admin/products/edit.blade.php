@@ -79,34 +79,73 @@
                             </div>
 
                             <div>
-                                <label for="images" class="block text-sm font-medium text-gray-700">Images du produit</label>
-                                <input type="file" name="images[]" id="images" multiple accept="image/*" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                <p class="mt-1 text-sm text-gray-500">Sélectionnez plusieurs images si nécessaire.</p>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Images actuelles du produit</label>
                                 
                                 @if($product->images->count() > 0)
-                                    <div class="mt-2 grid grid-cols-3 gap-2">
+                                    <div class="mt-2 grid grid-cols-3 gap-4">
                                         @foreach($product->images as $image)
-                                            <div class="relative">
-                                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $image->alt_text }}" class="w-full h-24 object-cover rounded">
+                                            <div class="relative group border-2 border-gray-200 rounded-lg overflow-hidden">
+                                                @php
+                                                    $imagePath = $image->image_path;
+                                                    $isExternalUrl = str_starts_with($imagePath, 'http://') || str_starts_with($imagePath, 'https://');
+                                                    $imageSrc = $isExternalUrl ? $imagePath : asset('storage/' . $imagePath);
+                                                @endphp
+                                                <img src="{{ $imageSrc }}" alt="{{ $image->alt_text }}" class="w-full h-32 object-cover">
+                                                
                                                 @if($image->is_primary)
-                                                    <span class="absolute top-0 right-0 bg-indigo-600 text-white text-xs px-2 py-1 rounded-bl">Principale</span>
+                                                    <span class="absolute top-0 left-0 bg-indigo-600 text-white text-xs px-2 py-1 rounded-br">Principale</span>
                                                 @endif
+                                                
+                                                <!-- Checkbox pour supprimer -->
+                                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
+                                                    <label class="hidden group-hover:flex items-center bg-white rounded-lg px-3 py-2 cursor-pointer">
+                                                        <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-2">
+                                                        <span class="text-sm text-red-600 font-medium">Supprimer</span>
+                                                    </label>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
+                                    <p class="mt-2 text-xs text-gray-500">Survolez une image pour la supprimer</p>
+                                @else
+                                    <p class="text-sm text-gray-500">Aucune image pour ce produit</p>
                                 @endif
                             </div>
-                            
-                            /// Champ pour URL d'image
-                            <div>
-                                <label for="image_url" class="block text-sm font-medium text-gray-700">URL de l'image principale</label>
-                                <input type="url" name="image_url" id="image_url" value="{{ old('image_url') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                <p class="mt-1 text-sm text-gray-500">Entrez une URL d'image si vous ne souhaitez pas télécharger une image.</p>
-                                // condition pour afficher URL de l'image a modifier
-                                @if($product->images->count() > 0)
-                                    <p class="mt-1 text-sm text-gray-500">URL actuelle : {{ asset('storage/' . $product->images->firstWhere('is_primary', true)->image_path) }}</p>
-                                @endif
+
+                            <div class="border-t border-gray-200 pt-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter de nouvelles images</label>
+                                
+                                <!-- Upload de fichiers -->
+                                <div class="mb-4">
+                                    <label for="images" class="block text-sm text-gray-600 mb-1">Option 1 : Télécharger des images</label>
+                                    <input type="file" name="images[]" id="images" multiple accept="image/*" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <p class="mt-1 text-sm text-gray-500">Sélectionnez plusieurs images si nécessaire.</p>
+                                </div>
+
+                                <!-- Séparateur -->
+                                <div class="relative mb-4">
+                                    <div class="absolute inset-0 flex items-center">
+                                        <div class="w-full border-t border-gray-300"></div>
+                                    </div>
+                                    <div class="relative flex justify-center text-sm">
+                                        <span class="px-2 bg-white text-gray-500">ou</span>
+                                    </div>
+                                </div>
+
+                                <!-- URL d'image -->
+                                <div>
+                                    <label for="image_url" class="block text-sm text-gray-600 mb-1">Option 2 : URL de l'image</label>
+                                    <input type="url" name="image_url" id="image_url" value="{{ old('image_url') }}" placeholder="https://example.com/image.jpg" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <p class="mt-1 text-xs text-gray-500">Entrez une URL d'image si vous ne souhaitez pas télécharger une image.</p>
+                                </div>
                             </div>
+                            <div class="flex items-center">
+                                <input id="is_active" name="is_active" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" {{ old('is_active', $product->is_active) ? 'checked' : '' }}>
+                                <label for="is_active" class="ml-2 block text-sm text-gray-900">
+                                    Produit actif
+                                </label>
+                            </div>
+
                             <div class="flex items-center">
                                 <input id="is_featured" name="is_featured" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }}>
                                 <label for="is_featured" class="ml-2 block text-sm text-gray-900">
