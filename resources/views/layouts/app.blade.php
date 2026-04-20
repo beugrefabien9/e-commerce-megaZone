@@ -53,10 +53,10 @@
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                     </svg>
                                 </button>
-                                    <div style="position: absolute; left: 0; top: 40px; width: 256px; background: white; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); z-index: 50; overflow: hidden;">
+                                <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1" style="display: none; position: absolute; left: 0; top: 40px; width: 256px; background: white; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); z-index: 50; overflow: hidden;">
                                     <div style="padding: 4px 0;">
                                         @foreach($navCategories as $cat)
-                                            <a href="{{ route('store.category', $cat) }}" style="display: block; padding: 12px 16px; font-size: 14px; color: #374151; text-decoration: none;">
+                                            <a href="{{ route('store.category', $cat) }}" style="display: block; padding: 12px 16px; font-size: 14px; color: #374151; text-decoration: none;" @click="open = false">
                                                 📦 {{ $cat->name }}
                                             </a>
                                         @endforeach
@@ -135,14 +135,21 @@
                         $navCategories = \App\Models\Category::where('is_active', true)->take(8)->get();
                     @endphp
                     @if($navCategories->count() > 0)
-                    <div style="padding: 12px; background: #f9fafb; border-radius: 8px;">
-                        <div style="font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em;">Catégories</div>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            @foreach($navCategories as $cat)
-                                <a href="{{ route('store.category', $cat) }}" style="padding: 8px 12px; font-size: 14px; color: #374151; text-decoration: none; border-radius: 6px;">
-                                    📦 {{ $cat->name }}
-                                </a>
-                            @endforeach
+                    <div x-data="{ categoriesOpen: false }">
+                        <button @click="categoriesOpen = !categoriesOpen" style="width: 100%; padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px; font-weight: 600; color: #374151; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            <span>📁 Catégories</span>
+                            <svg :class="{ 'rotate-180': categoriesOpen }" style="height: 16px; width: 16px; transition: transform 0.2s;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <div x-show="categoriesOpen" x-collapse style="display: none; margin-top: 8px; padding: 8px; background: #f9fafb; border-radius: 8px;">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                @foreach($navCategories as $cat)
+                                    <a href="{{ route('store.category', $cat) }}" style="padding: 10px 12px; font-size: 14px; color: #374151; text-decoration: none; border-radius: 6px;" @click="mobileMenu = false">
+                                        📦 {{ $cat->name }}
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                     @endif
